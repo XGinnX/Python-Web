@@ -22,20 +22,21 @@ def main (pagina): # 2. criar função principal
     
     def enviar_mensagem_tunel(mensagem):
         print("Enviou mensagem no túnel")
-        print(mensagem)
+        texto_mensagem = ft.Text(mensagem)
+        chat.controls.append(texto_mensagem)
+        pagina.update()
+
 
     pagina.pubsub.subscribe(enviar_mensagem_tunel)
 
     
     def enviar_mensagem(evento):
-        texto_mensagem = ft.Text(campo_mensagem.value)
-        chat.controls.append(texto_mensagem)
-        pagina.pubsub.send_all(texto_mensagem)
+        pagina.pubsub.send_all(f"{nome_usuario.value}: {campo_mensagem.value}")
         print("mensagem Enviada")
         campo_mensagem.value = ""
         pagina.update()
            
-    campo_mensagem = ft.TextField(label="Digite a sua mensagem")
+    campo_mensagem = ft.TextField(label="Digite a sua mensagem", on_submit=enviar_mensagem)
     botao_enviar = ft.ElevatedButton("Enviar",on_click=enviar_mensagem)
     linha_enviar = ft.Row([campo_mensagem,botao_enviar])
     
@@ -45,13 +46,12 @@ def main (pagina): # 2. criar função principal
          pagina.remove(texto)
          pagina.remove(botao_iniciar)
          pagina.add(chat)
-         texto_entrada = ft.Text(f"{nome_usuario.value} entrou no chat")
-         chat.controls.append(texto_entrada)
+         pagina.pubsub.send_all(f"{nome_usuario.value} entrou no chat")
          pagina.add(linha_enviar)
          pagina.update()
     
     titulo_popup = ft.Text("Bem vindo ao ChatZap")
-    nome_usuario = ft.TextField(label="Escreva seu nome no chat")
+    nome_usuario = ft.TextField(label="Escreva seu nome no chat",on_submit=entrar_no_chat)
     botao_entrar = ft.ElevatedButton("Entrar no chat", on_click=entrar_no_chat)
     
     popup = ft.AlertDialog(
