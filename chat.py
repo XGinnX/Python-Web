@@ -18,10 +18,28 @@ import flet as ft # 1. Importar
 def main (pagina): # 2. criar função principal
     texto = ft.Text("ChatZap")
     
+    chat = ft.Column()
+    
+    def enviar_mensagem(evento):
+        texto_mensagem = ft.Text(campo_mensagem.value)
+        chat.controls.append(texto_mensagem)
+        print("mensagem Enviada")
+        campo_mensagem.value = ""
+        pagina.update()
+           
+    campo_mensagem = ft.TextField(label="Digite a sua mensagem")
+    botao_enviar = ft.ElevatedButton("Enviar",on_click=enviar_mensagem)
+    linha_enviar = ft.Row([campo_mensagem,botao_enviar])
+    
     def entrar_no_chat(evento):
          print("Entrar no chat")
+         popup.open=False
          pagina.remove(texto)
          pagina.remove(botao_iniciar)
+         pagina.add(chat)
+         texto_entrada = ft.Text(f"{nome_usuario.value} entrou no chat")
+         chat.controls.append(texto_entrada)
+         pagina.add(linha_enviar)
          pagina.update()
     
     titulo_popup = ft.Text("Bem vindo ao ChatZap")
